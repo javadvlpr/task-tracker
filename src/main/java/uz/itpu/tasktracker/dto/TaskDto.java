@@ -1,9 +1,10 @@
 package uz.itpu.tasktracker.dto;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import uz.itpu.tasktracker.enums.Priority;
 import uz.itpu.tasktracker.enums.Status;
+
+import javax.validation.constraints.NotNull;
 
 
 @Data

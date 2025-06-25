@@ -1,13 +1,14 @@
 package uz.itpu.tasktracker.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import uz.itpu.tasktracker.enums.Priority;
 import uz.itpu.tasktracker.enums.Status;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "tasks")
 public class TaskEntity {
+    @javax.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

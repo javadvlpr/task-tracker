@@ -10,6 +10,7 @@ import uz.itpu.tasktracker.repository.TaskRepository;
 import uz.itpu.tasktracker.service.TaskService;
 import uz.itpu.tasktracker.utils.DateTimeUtils;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +30,7 @@ public class TaskServiceImpl implements TaskService {
     public TaskDto updateTask(Integer id, TaskDto taskDto) {
         TaskMapper.dtoToEntity(taskDto);
         Optional<TaskEntity> byId = taskRepository.findById(id);
-        if (byId.isPresent()) {
+        if (byId.isPresent()&& !byId.get().isDeleted()) {
             TaskEntity taskEntity = byId.get();
             taskEntity.setTitle(taskDto.getTitle());
             taskEntity.setContent(taskDto.getContent());
@@ -47,7 +48,10 @@ public class TaskServiceImpl implements TaskService {
     public String deleteTask(Integer id) {
         Optional<TaskEntity> byId = taskRepository.findById(id);
         if (byId.isPresent()) {
-            taskRepository.delete(byId.get());
+            TaskEntity taskEntity = byId.get();
+            taskEntity.setDeleted(true);
+            taskEntity.setDeleteDate(LocalDateTime.now());
+            taskRepository.save(taskEntity);
             return "Task with id " + id + " deleted successfully.";
         }
         throw new TaskNotFoundException(id);
@@ -56,7 +60,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskDto getTask(Integer id) {
         Optional<TaskEntity> byId = taskRepository.findById(id);
-        if (byId.isPresent()) {
+        if (byId.isPresent()&& !byId.get().isDeleted()) {
             return TaskMapper.entityToDto(byId.get());
         }
         throw new TaskNotFoundException(id);
@@ -67,6 +71,7 @@ public class TaskServiceImpl implements TaskService {
         List<TaskEntity> allTasks = taskRepository.findAll();
         if (!allTasks.isEmpty()) {
             return allTasks.stream()
+                    .filter(task -> !task.isDeleted()) // Filter out deleted tasks
                     .map(TaskMapper::entityToDto)
                     .toList();
         }
