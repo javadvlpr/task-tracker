@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.Id;
 import uz.itpu.tasktracker.enums.Priority;
 import uz.itpu.tasktracker.enums.Status;
@@ -37,6 +38,7 @@ public class TaskEntity {
     @Enumerated(EnumType.ORDINAL)
     private Priority priority;
 
+    @CreationTimestamp
     @Column(name = "created_datetime")
     private LocalDateTime createDate;
 
